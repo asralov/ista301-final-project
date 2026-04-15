@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Resonant Canvas</title>
+    <style>
+      body {
+        margin: 0;
+        background: #f4f1ea;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        font-family: sans-serif;
+      }
+      canvas {
+        background: white;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        cursor: crosshair;
+      }
+      .controls {
+        margin-top: 20px;
+        display: flex;
+        gap: 15px;
+      }
+      button {
+        padding: 10px 20px;
+        cursor: pointer;
+        border: none;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: 0.3s;
+      }
+      #startBtn {
+        background: #2d3436;
+        color: white;
+      }
+      #clearBtn {
+        background: #dfe6e9;
+        color: #2d3436;
+      }
+      #hint {
+        margin-bottom: 10px;
+        color: #636e72;
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="hint">The canvas is hungry for sound. Feed it.</div>
+    <canvas id="artCanvas" width="800" height="500"></canvas>
+
+    <div class="controls">
+      <button id="startBtn">PRESS AND MAKE NOISES</button>
+      <button id="clearBtn">CLEAR CANVAS</button>
+    </div>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
