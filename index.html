@@ -33,8 +33,12 @@
         font-weight: bold;
         transition: 0.3s;
       }
-      #startBtn {
+      #playBtn {
         background: #2d3436;
+        color: white;
+      }
+      #drawBtn {
+        background: #0984e3;
         color: white;
       }
       #clearBtn {
@@ -49,14 +53,16 @@
     </style>
   </head>
   <body>
-    <div id="hint">The canvas is hungry for sound. Feed it.</div>
+    <div id="hint">Draw, then play your drawing.</div>
     <canvas id="artCanvas" width="800" height="500"></canvas>
 
     <div class="controls">
-      <button id="startBtn">PRESS AND MAKE NOISES</button>
+      <button id="drawBtn">DRAW: OFF</button>
+      <button id="playBtn">PLAY DRAWING</button>
       <button id="clearBtn">CLEAR CANVAS</button>
     </div>
 
+    <script src="https://unpkg.com/tone@15.1.22/build/Tone.js"></script>
     <script type="module" src="app.js"></script>
   </body>
 </html>
