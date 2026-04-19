@@ -1,62 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Resonant Canvas</title>
-    <style>
-      body {
-        margin: 0;
-        background: #f4f1ea;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        font-family: sans-serif;
-      }
-      canvas {
-        background: white;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
-        cursor: crosshair;
-      }
-      .controls {
-        margin-top: 20px;
-        display: flex;
-        gap: 15px;
-      }
-      button {
-        padding: 10px 20px;
-        cursor: pointer;
-        border: none;
-        border-radius: 5px;
-        font-weight: bold;
-        transition: 0.3s;
-      }
-      #startBtn {
-        background: #2d3436;
-        color: white;
-      }
-      #clearBtn {
-        background: #dfe6e9;
-        color: #2d3436;
-      }
-      #hint {
-        margin-bottom: 10px;
-        color: #636e72;
-        font-style: italic;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="hint">The canvas is hungry for sound. Feed it.</div>
-    <canvas id="artCanvas" width="800" height="500"></canvas>
 
-    <div class="controls">
-      <button id="startBtn">PRESS AND MAKE NOISES</button>
-      <button id="clearBtn">CLEAR CANVAS</button>
+<head>
+  <meta charset="UTF-8">
+  <title>Resonant Canvas: Duo Mode</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+  <style>
+    body {
+      margin: 0;
+      background: #f4f1ea;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      font-family: sans-serif;
+    }
+
+    .mode-switcher {
+      margin-bottom: 20px;
+      background: #dfe6e9;
+      padding: 10px;
+      border-radius: 50px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .mode-btn {
+      background: transparent;
+      color: #2d3436;
+      border-radius: 20px;
+    }
+
+    .mode-btn.active {
+      background: #2d3436;
+      color: white;
+    }
+
+    canvas {
+      background: white;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      cursor: crosshair;
+    }
+
+    .controls {
+      margin-top: 20px;
+      display: flex;
+      gap: 15px;
+    }
+
+    button {
+      padding: 10px 20px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    #startBtn {
+      background: #2d3436;
+      color: white;
+    }
+
+    #drawBtn {
+      background: #0984e3;
+      color: white;
+    }
+
+    #playBtn {
+      background: #6c5ce7;
+      color: white;
+    }
+
+    #clearBtn {
+      background: #dfe6e9;
+      color: #2d3436;
+    }
+
+    #hint {
+      margin-bottom: 10px;
+      color: #636e72;
+      font-style: italic;
+      min-height: 20px;
+    }
+
+    /* Helper class to hide buttons */
+    .hidden {
+      display: none !important;
+    }
+
+    .disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .settings {
+      display: flex;
+      gap: 30px;
+      margin-bottom: 20px;
+      margin-top: 20px;
+      background: #fff;
+      padding: 15px 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: bold;
+      color: #636e72;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 120px;
+      background: transparent;
+    }
+
+    /* The Track */
+    input[type=range]::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 4px;
+      background: #dfe6e9;
+      border-radius: 2px;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 16px;
+      width: 16px;
+      border-radius: 50%;
+      background: #2d3436;
+      cursor: pointer;
+      margin-top: -6px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      transition: transform 0.1s ease;
+    }
+
+    input[type=range]:active::-webkit-slider-thumb {
+      transform: scale(1.2);
+      background: #6c5ce7;
+    }
+
+    button.disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      filter: grayscale(1);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="mode-switcher" id="modeContainer">
+    <button class="mode-btn active" id="modeSoundToDraw">Sound to Drawing</button>
+    <button class="mode-btn" id="modeDrawToSound">Drawing to Sound</button>
+  </div>
+
+  <div id="hint">The canvas is hungry for sound. Feed it.</div>
+
+  <canvas id="artCanvas" width="800" height="500"></canvas>
+
+  <div class="controls">
+    <button id="startBtn">PRESS AND MAKE NOISES</button>
+
+    <button id="drawBtn" class="hidden">DRAW: OFF</button>
+    <button id="playBtn" class="hidden">PLAY DRAWING</button>
+
+    <button id="clearBtn">CLEAR CANVAS</button>
+  </div>
+  <div class="settings" id="soundSettings">
+    <div class="control-group">
+      <label>Line Width:</label>
+      <input type="range" id="lineWidthRange" min="1" max="10" value="3">
     </div>
+    <div class="control-group">
+      <label>Step Size (Stride):</label>
+      <input type="range" id="strideRange" min="1" max="20" value="3">
+    </div>
+    <div class="control-group">
+      <label>Animation Speed:</label>
+      <input type="range" id="speedRange" min="1" max="10" value="10">
+    </div>
+  </div>
 
-    <script type="module" src="app.js"></script>
-  </body>
+  <script type="module" src="app.js"></script>
+</body>
+
 </html>
