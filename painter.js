@@ -6,9 +6,9 @@ export class Painter {
         this.initPositions(128);
     }
 
-    // Give each frequency index a unique, random starting point
+    // give each frequency index a unique, random starting point
     initPositions(count) {
-        this.positions = []; // Ensure array is fresh
+        this.positions = []; 
         for (let i = 0; i < count; i++) {
             this.positions.push({
                 x: Math.random() * this.width,
@@ -20,8 +20,6 @@ export class Painter {
     drawStep(ctx, frequencyData, lineWidth, stride) {
         if (!frequencyData) return;
         
-        // Note: 140 is quite high! If you find it's too hard to trigger,
-        // you might want to try 50-70. But if your PC is loud, stay high.
         const THRESHOLD = 180; 
         
         frequencyData.forEach((value, index) => {
@@ -44,7 +42,7 @@ export class Painter {
                 else if (direction === 2) pos.x -= stride;
                 else pos.x += stride;
 
-                // Keep painter within canvas bounds
+                // keep painter within canvas bounds
                 pos.x = Math.max(0, Math.min(this.width, pos.x));
                 pos.y = Math.max(0, Math.min(this.height, pos.y));
 
@@ -54,8 +52,6 @@ export class Painter {
         });
     }
 
-    // When clearing, randomize the positions again so the next 
-    // "performance" starts fresh in different spots
     resetPositions() {
         this.positions.forEach(pos => {
             pos.x = Math.random() * this.width;
