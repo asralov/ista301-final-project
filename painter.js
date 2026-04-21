@@ -15,9 +15,9 @@ export class Painter {
     // Now accepts lineWidth and stride as parameters
     drawStep(ctx, frequencyData, lineWidth, stride) {
         if (!frequencyData) return;
-
+        const THRESHOLD = 40;
         frequencyData.forEach((value, index) => {
-            if (value === 0) return;
+            if (value < THRESHOLD) return;
 
             const steps = Math.floor(value / 10); 
             
